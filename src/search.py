@@ -1,87 +1,92 @@
-import util
+#
+# MAC0425/5730 - Inteligencia Artificial - EP1 @ 2013.2
+# Autor: Bruno Nunes Leal Faria - nUSP: 8765551
+#
+# FILE: search.py
+#
+# import time
+import math
 
-class SearchProblem:
-  """
-  This class outlines the structure of a search problem, but doesn't implement
-  any of the methods (in object-oriented terminology: an abstract class).
-  
-  You do not need to change anything in this class, ever.
-  """
-  
-  def getStartState(self):
-     """
-     Returns the start state for the search problem 
-     """
-     util.raiseNotDefined()
-    
-  def isGoalState(self, state):
-     """
-       state: Search state
-    
-     Returns True if and only if the state is a valid goal state
-     """
-     util.raiseNotDefined()
+# Breadth First Search
+def bfs(env, agent, y, x):
+	queue = []
+	q_buffer = []
+	# initial append root
+	queue.append([y,x])
+	
+	while queue:
+		# saves current state
+		current_state = queue[0]
+		# get from queue list
+		queue.pop(0)
 
-  def getSuccessors(self, state):
-     """
-       state: Search state
-     
-     For a given state, this should return a list of triples, 
-     (successor, action, stepCost), where 'successor' is a 
-     successor to the current state, 'action' is the action
-     required to get there, and 'stepCost' is the incremental 
-     cost of expanding to that successor
-     """
-     util.raiseNotDefined()
+		# debug
+		# for x in range(8):
+		# 	for y in range(8): 
+		# 		if current_state[0] == x and current_state[1] == y:
+		# 			print "x",
+		# 		else:
+		# 			print env.map[x][y],
+		# 	print "\n",
+		# print
+		# time.sleep(0.5)
 
-  def getCostOfActions(self, actions):
-     """
-      actions: A list of actions to take
- 
-     This method returns the total cost of a particular sequence of actions.  The sequence must
-     be composed of legal moves
-     """
-     util.raiseNotDefined()
-           
+		# is it gold?
+		if env.map[current_state[0]][current_state[1]] == "*":
+			# updates information
+			env.map[current_state[0]][current_state[1]] = "0"
+			env.gold_count-=1
+			# updates agent pos for next batch
+			agent.pos_y = current_state[0]
+			agent.pos_x = current_state[1]
+			# saves action
+			q_buffer.append("P")
+			agent.visited.append(current_state)
+			# we are done here
+			queue = []
+			break
+		else:
+			# take notes of visited places
+			agent.visited.append(current_state)
 
-def tinyMazeSearch(problem):
-  """
-  Returns a sequence of moves that solves tinyMaze.  For any other
-  maze, the sequence of moves will be incorrect, so only use this for tinyMaze
-  """
-  from game import Directions
-  s = Directions.SOUTH
-  w = Directions.WEST
-  return  [s,s,w,s,w,w,s,w]
+			# move right
+			if agent.can_move_right(env.map, current_state):
+				queue.append([current_state[0], current_state[1]+1])
+				q_buffer.append("D")
+			# move left
+			if agent.can_move_left(env.map, current_state):
+				queue.append([current_state[0], current_state[1]-1])
+				q_buffer.append("E")
+			# move up
+			if agent.can_move_up(env.map, current_state):
+				queue.append([current_state[0]-1, current_state[1]])
+				q_buffer.append("C")
+			# move down
+			if agent.can_move_down(env.map, current_state):
+				queue.append([current_state[0]+1, current_state[1]])
+				q_buffer.append("B")
 
-def depthFirstSearch(problem):
-  """
-  Search the deepest nodes in the search tree first [p 74].
-  
-  Your search algorithm needs to return a list of actions that reaches
-  the goal.  Make sure to implement a graph search algorithm [Fig. 3.18].
-  """
-  "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+	for c in q_buffer:
+		print c,
+	return True
 
-def breadthFirstSearch(problem):
-  "Search the shallowest nodes in the search tree first. [p 74]"
-  "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
-      
-def uniformCostSearch(problem):
-  "Search the node of least total cost first. "
-  "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+# Deapth First Search
+def dfs(env, y, x):
+	return True
 
-def nullHeuristic(state, problem=None):
-  """
-  A heuristic function estimates the cost from the current state to the nearest
-  goal in the provided SearchProblem.  This heuristic is trivial.
-  """
-  return 0
+# A star search
+def astar(env, y, x):
+	return True
 
-def aStarSearch(problem, heuristic=nullHeuristic):
-  "Search the node that has the lowest combined cost and heuristic first."
-  "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+# estimate cost to get to gold using an heuristic
+# f(n) = g(n) + h(n) where h(n) = dist(current_pos,gold_pos)
+def estimate_cost(state, gold_pos, size):
+	# cost to move inside the mine
+	cost_step = -1
+	# reward for picking up a gold
+	cost_gold = 4 * int(size)
+	
+	# heuristic - number of steps from current position to gold position
+	num_steps = math.fabs(gold_pos[0]-state[0]) + math.fabs(gold_pos[1]-state[1])
+	cost = (cost_step*num_steps)+cost_gold
+	return cost
