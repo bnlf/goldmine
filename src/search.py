@@ -21,8 +21,20 @@ def bfs(graph, start, end, agent):
 			else:
 				todo.append([next_node, path + [next_node]])
 
-def dfs(graph, start, end, agent):
-	return True
+def dfs(graph, start, end, path=[]):
+    path = path + [start]
+    if start == end:
+        return path
+    if not graph.has_key(start):
+        return None
+    shortest = None
+    for node in graph[start]:
+        if node not in path:
+            newpath = dfs(graph, node, end, path)
+            if newpath:
+                if not shortest or len(newpath) < len(shortest):
+                    shortest = newpath
+    return shortest
 
 # A star search
 def astar(env, y, x):

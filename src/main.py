@@ -114,4 +114,18 @@ if check_args():
 					# objective state
 					objective = env.gold_left[0]
 					env.gold_left.pop(0)
-					search.dfs(env.graph, state, objective, a)
+					path = search.dfs(env.graph, state, objective)
+					# updates agent location
+					a.current_state = path[len(path)-1]
+					# fix for duplicates (leaving from, arriving at)
+					path.remove(path[len(path)-1])
+					a.track.extend(path)
+
+				# now go back to entrance
+				path = search.dfs(env.graph, a.current_state, 0)
+				a.track.extend(path)
+				translate_path(a.track)
+
+			if env.search_type == "A":
+				print "A+ Not implemented"
+
