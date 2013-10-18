@@ -4,71 +4,23 @@
 #
 # FILE: search.py
 #
-# import time
 import math
+import time
+import node
+from collections import deque
 
-# Breadth First Search
-def bfs(env, agent, y, x):
-	queue = []
-	q_buffer = []
-	# initial append root
-	queue.append([y,x])
-	
-	while queue:
-		# saves current state
-		current_state = queue[0]
-		# get from queue list
-		queue.pop(0)
-
-		# debug
-		# for x in range(8):
-		# 	for y in range(8): 
-		# 		if current_state[0] == x and current_state[1] == y:
-		# 			print "x",
-		# 		else:
-		# 			print env.map[x][y],
-		# 	print "\n",
-		# print
-		# time.sleep(0.5)
-
-		# is it gold?
-		if env.map[current_state[0]][current_state[1]] == "*":
-			# updates information
-			env.map[current_state[0]][current_state[1]] = "0"
-			env.gold_count-=1
-			# updates agent pos for next batch
-			agent.pos_y = current_state[0]
-			agent.pos_x = current_state[1]
-			# saves action
-			q_buffer.append("P")
-			agent.visited.append(current_state)
-			# we are done here
-			queue = []
-			break
-		else:
-			# take notes of visited places
-			agent.visited.append(current_state)
-
-			# move right
-			if agent.can_move_right(env.map, current_state):
-				queue.append([current_state[0], current_state[1]+1])
-				q_buffer.append("D")
-			# move left
-			if agent.can_move_left(env.map, current_state):
-				queue.append([current_state[0], current_state[1]-1])
-				q_buffer.append("E")
-			# move up
-			if agent.can_move_up(env.map, current_state):
-				queue.append([current_state[0]-1, current_state[1]])
-				q_buffer.append("C")
-			# move down
-			if agent.can_move_down(env.map, current_state):
-				queue.append([current_state[0]+1, current_state[1]])
-				q_buffer.append("B")
-
-	for c in q_buffer:
-		print c,
-	return True
+def bfs(graph, start, end, agent):
+	todo = [[start, [start]]]
+	while 0 < len(todo):
+		(node, path) = todo.pop(0)
+		for next_node in graph[node]:
+			if next_node in path:
+				continue
+			elif next_node == end:
+				agent.current_state = next_node
+				return path + [next_node]
+			else:
+				todo.append([next_node, path + [next_node]])
 
 # Deapth First Search
 def dfs(env, y, x):
