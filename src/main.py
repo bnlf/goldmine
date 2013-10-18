@@ -9,8 +9,6 @@ import sys
 import environment
 import search
 import agent
-import graph
-import helper
 
 # global vars
 a = agent.agent()
@@ -108,4 +106,12 @@ if check_args():
 				translate_path(a.track)
 
 			if env.search_type == "P":
-				print "Not Implemented"
+				a.track = []
+				while env.gold_left:
+					#initial pos
+					state = a.current_state
+
+					# objective state
+					objective = env.gold_left[0]
+					env.gold_left.pop(0)
+					search.dfs(env.graph, state, objective, a)

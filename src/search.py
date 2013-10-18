@@ -21,8 +21,7 @@ def bfs(graph, start, end, agent):
 			else:
 				todo.append([next_node, path + [next_node]])
 
-# Deapth First Search
-def dfs(env, y, x):
+def dfs(graph, start, end, agent):
 	return True
 
 # A star search
