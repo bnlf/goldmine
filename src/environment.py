@@ -28,13 +28,14 @@ class environment:
 		x = 0
 		y = 0
 		# read dimension
-		c = stream.read(1)
+		c = stream.readline()
+		c = c.split('\n', 1)[0]
 		# take not of gold mine size
 		self.size = c
 		if c.isdigit():
 			mine_field = [[0]*int(c) for i in range(int(c))]
 		# read newline
-			c = stream.read(1) 
+			#c = stream.read(1) 
 			# read the mine map
 			while True:
 				c = stream.read(1)
