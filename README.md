@@ -1,22 +1,13 @@
-### Inteligência Artificial – Exercício Programa 1 ###
+### Inteligência Artificial – Search algorithms ###
 
-Mina de Ouro
+BEWARE:
+Incomplete implementation of a few search algorithms in Python
 
-### Ambiente ###
+Environment: A gold mine n x n, 1 = wall, * = gold, 0 = free passage
+Cost of step: 1
+Cost of gold: -4n
+Possible actions: Left, Right, Up, Down, Pickup
 
-Mina - n x n, 1 = obstáculo, * = ouro, 0 = livre
- 
-Quantidade de ouro: n/2
+Algorithms: BFS, DFS, A*
 
-Custo do passo: 1
-
-Ganho do ouro: 4n
-
-Ações: (D)ireita, (E)squerda, (C)ima, (B)aixo, (P)egar
-
-### Objetivos ###
-
-- Um ambiente de avaliação, que recebe as ações do agente e calcula sua
-pontuação. O ambiente é acessível e determinístico.
-- Um agente resolvedor de problemas.
 
